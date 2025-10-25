@@ -1,11 +1,25 @@
 # view.py
+import sys
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from tkinter import colorchooser
 from PIL import Image, ImageTk
 import os
+import tkinter as tk
+from customtkinter import CTkImage
 
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+if getattr(sys, 'frozen', False):
+    os.environ['TK_LIBRARY'] = os.path.join(sys._MEIPASS, 'tcl8.6')
+    os.environ['TCL_LIBRARY'] = os.path.join(sys._MEIPASS, 'tcl8.6')
 
 
 class CodeGeneratorView(ctk.CTk):
@@ -15,25 +29,34 @@ class CodeGeneratorView(ctk.CTk):
         
         
         # ---- Chemins des icônes ----
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        ICON_COLOR = os.path.join(BASE_DIR, "icons", "emoji-sunglasses-fill.ico")
-        ICON_GEM = os.path.join(BASE_DIR, "icons", "gem.ico")
-        ICON_SAVE = os.path.join(BASE_DIR, "icons", "cloud-arrow-down-fill.ico")
+        if getattr(sys, 'frozen', False):
+            BASE_DIR = sys._MEIPASS
+        else:
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+        
+        self.ICON_ICO_PATH = resource_path("m/v/icons/im.ico")
+        self.ICON_PNG_PATH = resource_path("m/v/icons/im.PNG")
+        self.ICON_GEM = resource_path("m/v/icons/gem.ico")
+        self.ICON_SAVE = resource_path("m/v/icons/cloud-arrow-down-fill.ico")
 
         # ---- Charger et redimensionner les icônes ----
-        self.icon_color = ImageTk.PhotoImage(
-            Image.open(ICON_COLOR).resize((20, 20), Image.Resampling.LANCZOS)
-        )
-        self.icon_gem = ImageTk.PhotoImage(
-            Image.open(ICON_GEM).resize((20, 20), Image.Resampling.LANCZOS)
-        )
-        self.icon_save = ImageTk.PhotoImage(
-            Image.open(ICON_SAVE).resize((20, 20), Image.Resampling.LANCZOS)
-        )
-        
+        self.icon_gem = CTkImage(Image.open(self.ICON_GEM).resize((20, 20)))
+        self.icon_save = CTkImage(Image.open(self.ICON_SAVE).resize((20, 20)))
+                
+        if os.name == "nt":
+            self.iconbitmap(self.ICON_ICO_PATH)
+        else:
+            self.iconphoto(True, ImageTk.PhotoImage(file=self.ICON_PNG_PATH))
+
+
+
+            
         self.title("Générateur QR Code & Code-barres")
         self.geometry("600x690")
         self.resizable(False, False)
+        
+                
 
         ctk.set_appearance_mode("light")
         ctk.set_default_color_theme("blue")
@@ -41,6 +64,7 @@ class CodeGeneratorView(ctk.CTk):
         self.generated_image = None
         self.fill_color = "black"
         self.back_color = "white"
+        
 
         # ---- Widgets ----
         self.label_title = ctk.CTkLabel(self, text="Générateur de QR Code & Code-barres", font=("Arial", 20, "bold"))
