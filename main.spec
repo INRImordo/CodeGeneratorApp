@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('m/v/icons', 'icons')],
+    datas=[('m/v/icons', 'm/v/icons')],
     hiddenimports=['qrcode', 'PIL', 'PIL._tkinter_finder'],
     hookspath=[],
     hooksconfig={},
@@ -35,4 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['m/v/icons/im.ico'],
 )

@@ -1,4 +1,3 @@
-# controller.py
 from tkinter import messagebox, filedialog
 
 class CodeController:
@@ -6,7 +5,7 @@ class CodeController:
         self.model = model
         self.view = view
 
-        # Lier les actions des boutons à leurs fonctions
+        # Lier les actions
         self.view.generate_button.configure(command=self.generate_code)
         self.view.save_button.configure(command=self.save_code)
 
@@ -18,10 +17,11 @@ class CodeController:
 
         code_type = self.view.get_code_type()
         fill, back = self.view.get_colors()
+        logo_path = self.view.get_logo_path()  # 🔹 récupération du logo
 
         try:
             if code_type == "QR Code":
-                img = self.model.generate_qr(data, fill, back)
+                img = self.model.generate_qr(data, fill, back, logo_path)
             else:
                 img = self.model.generate_barcode(data)
             self.view.display_image(img)
